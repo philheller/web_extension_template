@@ -2,15 +2,19 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import { resolve } from "path";
 
+const root = resolve(__dirname, "src", "html");
+const outDir = resolve(__dirname, "dist");
+
 // https://vitejs.dev/config/
 export default defineConfig({
+  root,
   plugins: [react()],
   build: {
-    emptyOutDir: true,
+    outDir,
     rollupOptions: {
       input: {
-        main: resolve(__dirname, "index.html"),
-        options: resolve(__dirname, "options/options.html"),
+        main: resolve(root, "index.html"),
+        options: resolve(root, "options", "index.html"),
       },
     },
   },

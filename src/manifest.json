@@ -1,0 +1,86 @@
+{
+  "manifest_version": 3,
+  "name": "My Extension",
+  "version": "0.0.0",
+  "version_name": "0.0.0 (displayed to users, while version is for internal strict ordering and updates)",
+  "action": {
+    "default_title": "__MSG_extensionName__",
+    "default_icon": {
+      "16": "img/icons/cursor16.png",
+      "24": "img/icons/cursor24.png",
+      "32": "img/icons/cursor32.png",
+      "38": "img/icons/cursor16.png",
+      "48": "img/icons/cursor48.png",
+      "128": "img/icons/cursor128.png"
+    }
+  },
+  "default_locale": "en",
+  "description": "__MSG_extensionDescription__",
+  "icons": {
+    "16": "img/icons/cursor16.png",
+    "24": "img/icons/cursor24.png",
+    "32": "img/icons/cursor32.png",
+    "38": "img/icons/cursor16.png",
+    "48": "img/icons/cursor48.png",
+    "128": "img/icons/cursor128.png"
+  },
+  "author": "Your Name",
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "css": ["css/styles.min.css"],
+      "js": ["js/contentScript.js"]
+    }
+  ],
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "addon@example.com",
+      "strict_min_version": "42.0"
+    }
+  },
+  "commands": {
+    "run-foo": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+Y",
+        "windows": "Ctrl+Shift+Y",
+        "mac": "Command+Shift+Y",
+        "chromeos": "Ctrl+Shift+U",
+        "linux": "Ctrl+Shift+J"
+      },
+      "description": "Run \"foo\" on the current page."
+    }
+  },
+  "externally_connectable": {
+    "matches": ["*://*.example.com/*/use/with/caution"]
+  },
+  "homepage_url": "https://path/to/homepage",
+  "permissions": ["activeTab", "contextMenus", "storage"],
+  "optional_permissions": ["tabs"],
+  "host_permissions": ["https://www.developer.chrome.com/*"],
+  "incognito": "not_allowed",
+  "minimum_chrome_version": "56",
+  "offline_enabled": true,
+  "omnibox": {
+    "keyword": "aString"
+  },
+  "options_page": "html/options.html",
+  "options_ui": {
+    "page": "html/options.html",
+    "open_in_tab": false
+  },
+  "short_name": "Short Name",
+  "web_accessible_resources": [
+    {
+      "resources": ["test1.png", "test2.png"],
+      "matches": ["https://web-accessible-resources-1.glitch.me/*"]
+    },
+    {
+      "resources": ["test3.png", "test4.png"],
+      "matches": ["https://web-accessible-resources-2.glitch.me/*"],
+      "use_dynamic_url": true
+    }
+  ]
+}
