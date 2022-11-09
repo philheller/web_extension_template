@@ -146,9 +146,11 @@ const css = () =>
 // ts => minified js
 const ts = (inputFromSrc) => {
   const isBgScript =
-    inputFromSrc === manifest.background.service_worker ? true : false;
+    inputFromSrc.replace(/.ts$/, ".js") === manifest.background.service_worker
+      ? true
+      : false;
   // ignore jest test files
-  const jestTestsGlob = inputFromSrc.slice(0, -2).concat("test.js");
+  const jestTestsGlob = inputFromSrc.slice(0, -2).concat("test.ts");
 
   // if it is backgroundscript, write to root folder, else write all to js
   const outputPath = isBgScript ? `${dist}/` : `${dist}/js`;
@@ -170,8 +172,7 @@ const ts = (inputFromSrc) => {
           platform: "browser",
         })
       )
-      // add suffix
-      .pipe(rename({ suffix: ".min" }))
+      .pipe(buffer())
       // write sourcemap
       .pipe(sourcemaps.write(""))
       .pipe(gulp.dest(outputPath))
@@ -183,7 +184,7 @@ const js = (inputFromSrc) => {
   const isBgScript =
     inputFromSrc === manifest.background.service_worker ? true : false;
   // ignore jest test files
-  const jestTestsGlob = inputFromSrc.slice(0, -2).concat("test.js");
+  const jestTestsGlob = inputFromSrc.slice(0, -2).concat("test.ts");
 
   // if it is backgroundscript, write to root folder, else write all to js
   const outputPath = isBgScript ? `${dist}/` : `${dist}/js`;
