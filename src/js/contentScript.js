@@ -1,4 +1,4 @@
-import { $, jQuery } from "jquery";
+import { isFuture } from "date-fns";
 
 function add(a, b) {
   return a + b;

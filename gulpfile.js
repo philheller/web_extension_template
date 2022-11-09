@@ -1,31 +1,35 @@
 // IMPORTS
 // gulp & globals
-const gulp = require("gulp");
-const plumber = require("gulp-plumber");
-const rename = require("gulp-rename");
-const sourcemaps = require("gulp-sourcemaps");
-const argv = require("yargs").argv;
-const log = require("fancy-log");
-const notifier = require("node-notifier");
-const del = require("del");
-const gzip = require("gulp-zip");
+import gulp from "gulp";
+import plumber from "gulp-plumber";
+import rename from "gulp-rename";
+import sourcemaps from "gulp-sourcemaps";
+import yargs from "yargs";
+const { argv } = yargs;
+import log from "fancy-log";
+import notifier from "node-notifier";
+// import del from "del";
+import gzip from "gulp-zip";
 
 // media (imgs and svgs)
-const svgmin = require("gulp-svgmin");
+import svgmin from "gulp-svgmin";
 
 // sass
-const sass = require("gulp-sass")(require("sass"));
-sass.compiler = require("sass");
-const postcss = require("gulp-postcss");
-const autoprefixer = require("autoprefixer");
-const cssnano = require("cssnano");
 
-// html
-const htmlmin = require("gulp-htmlmin");
+// const sass = require("gulp-sass")(require("sass"));
+import sassFrag from "sass";
+import gulpSass from "gulp-sass";
+const sass = gulpSass(sassFrag);
+
+// sass.compiler = require("sass");
+sass.compiler = sassFrag;
+import postcss from "gulp-postcss";
+import autoprefixer from "autoprefixer";
+import cssnano from "cssnano";
 
 // js
-const buffer = require("vinyl-buffer");
-const { createGulpEsbuild } = require("gulp-esbuild");
+import buffer from "vinyl-buffer";
+import { createGulpEsbuild } from "gulp-esbuild";
 const gulpEsbuild = createGulpEsbuild({ incremental: false });
 
 // IMPORTANT VARIABLES
@@ -54,7 +58,7 @@ function notify(cb, title, message) {
 // TASKS
 // clear build
 const clear = async (cb) => {
-  await del(["dist"]);
+  // await del(["dist"]);
   cb();
 };
 
@@ -137,11 +141,7 @@ const css = () =>
 
 // js => minified js
 const js = (inputFromSrc) => {
-  // check if this is the background script
-  const bgScriptName = require(`${src}/manifest.json`).background
-    .service_worker;
-
-  const isBgScript = inputFromSrc === bgScriptName ? true : false;
+  const isBgScript = inputFromSrc === "background.js" ? true : false;
   // ignore jest test files
   const jestTestsGlob = inputFromSrc.slice(0, -2).concat("test.js");
 
@@ -203,20 +203,11 @@ const watch = () => {
 // all basic Tasks that are performed at beginning of sessions
 const allBasicTasks = gulp.series(
   cpManifest,
-  gulp.parallel(
-    locales,
-    copyImgs,
-    svg,
-    html,
-    css,
-    contentScripts,
-    backgroundScript
-  )
+  gulp.parallel(locales, copyImgs, svg, css, contentScripts, backgroundScript)
 );
 
 // dev task (building and watching afterwards)
-const dev = gulp.series(
-  clear,
+export const dev = gulp.series(
   allBasicTasks,
   (cb) =>
     notify(
@@ -228,17 +219,30 @@ const dev = gulp.series(
 );
 
 // build without watching
-const build = gulp.series(clear, allBasicTasks, (cb) =>
+export const build = gulp.series(allBasicTasks, (cb) =>
   notify(cb, "Build done!", "The build is done.")
 );
 
-const package = gulp.series(clear, allBasicTasks, zip, thunderZip, (cb) => {
-  notify(cb, "Packages are zipped.", "Packages are finished zipping.");
-});
+export const packageExtension = gulp.series(
+  allBasicTasks,
+  zip,
+  thunderZip,
+  (cb) => {
+    notify(cb, "Packages are zipped.", "Packages are finished zipping.");
+  }
+);
 
-exports.dev = dev;
-exports.build = build;
-exports.clear = clear;
-exports.package = package;
-// default function (used with just "gulp")
-exports.default = dev;
+// export default {
+//   dev,
+//   build,
+//   clear,
+//   package: packageExtension,
+//   // used when just using "gulp"
+//   default: dev,
+// };
+// exports.dev = dev;
+// exports.build = build;
+// exports.clear = clear;
+// exports.package = packageExtension;
+// // default function (used with just "gulp")
+// exports.default = dev;

@@ -66,9 +66,9 @@
   "omnibox": {
     "keyword": "aString"
   },
-  "options_page": "html/options.html",
+  "options_page": "options/index.html",
   "options_ui": {
-    "page": "html/options.html",
+    "page": "options/index.html",
     "open_in_tab": false
   },
   "short_name": "Short Name",
