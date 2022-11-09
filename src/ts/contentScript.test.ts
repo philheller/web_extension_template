@@ -1,4 +1,4 @@
-const { add } = require("./contentScript");
+import { add } from "./contentScript";
 
 describe("Testing func add", () => {
   test("Testing func add with 2 + 5 = 7", () => {
@@ -6,6 +6,6 @@ describe("Testing func add", () => {
   });
 
   test("Testing func add with 2 + 5 = 7", () => {
-    expect(add(null, 5)).toBe(5);
+    expect(add(-5, 5)).toBe(0);
   });
 });

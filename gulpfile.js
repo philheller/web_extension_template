@@ -143,6 +143,41 @@ const css = () =>
     .pipe(sourcemaps.write(""))
     .pipe(gulp.dest(`${dist}/css`));
 
+// ts => minified js
+const ts = (inputFromSrc) => {
+  const isBgScript =
+    inputFromSrc === manifest.background.service_worker ? true : false;
+  // ignore jest test files
+  const jestTestsGlob = inputFromSrc.slice(0, -2).concat("test.js");
+
+  // if it is backgroundscript, write to root folder, else write all to js
+  const outputPath = isBgScript ? `${dist}/` : `${dist}/js`;
+  return (
+    gulp
+      .src([`${src}/${inputFromSrc}`, `!${src}/${jestTestsGlob}`])
+      // plumber for error-handling
+      .pipe(plumber())
+      // init sourcemap
+      .pipe(sourcemaps.init())
+      // compile ts to js
+      .pipe(
+        gulpEsbuild({
+          bundle: true,
+          minifyWhitespace: true,
+          minifyIdentifiers: true,
+          minifySyntax: true,
+          sourcemap: true,
+          platform: "browser",
+        })
+      )
+      // add suffix
+      .pipe(rename({ suffix: ".min" }))
+      // write sourcemap
+      .pipe(sourcemaps.write(""))
+      .pipe(gulp.dest(outputPath))
+  );
+};
+
 // js => minified js
 const js = (inputFromSrc) => {
   const isBgScript =
@@ -168,8 +203,9 @@ const js = (inputFromSrc) => {
     .pipe(buffer())
     .pipe(gulp.dest(outputPath));
 };
-const contentScripts = () => js(`js/**/*.js`);
-const backgroundScript = () => js(`background.js`);
+const contentScripts = () => ts(`ts/**/*.ts`);
+// const contentScripts = () => js(`js/**/*.js`);
+const backgroundScript = () => ts(`background.ts`);
 
 // to folders for installs
 const compress = (ext) => {

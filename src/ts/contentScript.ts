@@ -1,10 +1,10 @@
 import { isFuture } from "date-fns";
 
-function add(a, b) {
+function add(a: number, b: number): number {
   return a + b;
 }
 
-function countClick() {
+function countClick(): void {
   chrome.runtime.sendMessage(
     { message: "incrementCounter" },
     function (response) {
@@ -14,6 +14,6 @@ function countClick() {
 }
 
 const body = document.querySelector("body");
-body.addEventListener("click", () => countClick());
+body?.addEventListener("click", () => countClick());
 
-module.exports = { add };
+export { add };

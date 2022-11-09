@@ -1,4 +1,6 @@
-module.exports = {
+import type { Config } from "jest";
+
+export default {
   verbose: true,
   roots: ["./src/"],
   collectCoverage: true,
@@ -12,4 +14,4 @@ module.exports = {
   //     statements: -10,
   //   },
   // },
-};
+} as Config;

@@ -1,3 +1,4 @@
+/// <reference path="../node_modules/@types/chrome/index.d.ts"/>
 // helper functions
 function resetCounter() {
   chrome.storage.local.set({ counter: 0 }, () => {
@@ -7,7 +8,7 @@ function resetCounter() {
   });
 }
 
-function updateBadge(badgeContent) {
+function updateBadge(badgeContent: string | number) {
   chrome.action.setBadgeText({ text: String(badgeContent) });
 }
 
@@ -48,3 +49,5 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
     sendResponse({ result: "success" });
   }
 });
+
+export {};
