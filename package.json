@@ -8,9 +8,9 @@
     "vite_preview": "vite preview",
     "gulp": "gulp dev",
     "gulp_build": "gulp build --includeDependencies",
-    "dev": "concurrently --kill-others \"gulp dev\" \"tsc && vite build && vite\"",
-    "build": "concurrently --kill-others \"tsc && vite build\" \"gulp build --includeDependencies\"",
-    "package": "tsc && vite build && gulp package",
+    "dev": "npm run build && concurrently --kill-others \"tsc && vite\" \"gulp dev\"",
+    "build": "tsc && vite build && gulp build --includeDependencies",
+    "package": "tsc && vite build && gulp packaging",
     "test": "jest --config jest.config.js"
   },
   "dependencies": {

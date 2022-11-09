@@ -15,6 +15,7 @@ export default defineConfig({
       input: {
         main: resolve(root, "index.html"),
         options: resolve(root, "options", "index.html"),
+        popup: resolve(root, "popup", "index.html"),
       },
     },
   },

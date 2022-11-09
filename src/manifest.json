@@ -1,28 +1,20 @@
 {
   "manifest_version": 3,
-  "name": "My Extension",
+  "name": "__MSG_extensionName__",
+  "short_name": "__MSG_extensionShortName__",
   "version": "0.0.0",
   "version_name": "0.0.0 (displayed to users, while version is for internal strict ordering and updates)",
   "action": {
     "default_title": "__MSG_extensionName__",
     "default_icon": {
-      "16": "img/icons/cursor16.png",
-      "24": "img/icons/cursor24.png",
-      "32": "img/icons/cursor32.png",
-      "38": "img/icons/cursor16.png",
-      "48": "img/icons/cursor48.png",
-      "128": "img/icons/cursor128.png"
-    }
+      "128": "img/cursor.png"
+    },
+    "default_popup": "popup/index.html"
   },
   "default_locale": "en",
   "description": "__MSG_extensionDescription__",
   "icons": {
-    "16": "img/icons/cursor16.png",
-    "24": "img/icons/cursor24.png",
-    "32": "img/icons/cursor32.png",
-    "38": "img/icons/cursor16.png",
-    "48": "img/icons/cursor48.png",
-    "128": "img/icons/cursor128.png"
+    "128": "img/cursor.png"
   },
   "author": "Your Name",
   "background": {
@@ -71,7 +63,6 @@
     "page": "options/index.html",
     "open_in_tab": false
   },
-  "short_name": "Short Name",
   "web_accessible_resources": [
     {
       "resources": ["test1.png", "test2.png"],

@@ -11,6 +11,10 @@ import notifier from "node-notifier";
 // import del from "del";
 import gzip from "gulp-zip";
 
+// manifest.json
+import manifest from "./src/manifest.json" assert { type: "json" };
+import messages from "./src/_locales/en/messages.json" assert { type: "json" };
+
 // media (imgs and svgs)
 import svgmin from "gulp-svgmin";
 
@@ -96,26 +100,26 @@ const cpManifest = () =>
     .pipe(gulp.dest(`${dist}`));
 
 // html => minified .html
-const html = () =>
-  gulp
-    .src(`${src}/html/*.html`)
-    // plumber for error-handling
-    .pipe(plumber())
-    // minify html
-    .pipe(
-      htmlmin({
-        html5: true,
-        collapseWhitespace: true,
-        useShortDoctype: true,
-        removeComments: true,
-        removeRedundantAttributes: true,
-        sortClassName: true,
-        sortAttributes: true,
-        minifyCSS: true,
-        minifyJS: true,
-      })
-    )
-    .pipe(gulp.dest(`${dist}/html/`));
+// const html = () =>
+//   gulp
+//     .src(`${src}/html/*.html`)
+//     // plumber for error-handling
+//     .pipe(plumber())
+//     // minify html
+//     .pipe(
+//       htmlmin({
+//         html5: true,
+//         collapseWhitespace: true,
+//         useShortDoctype: true,
+//         removeComments: true,
+//         removeRedundantAttributes: true,
+//         sortClassName: true,
+//         sortAttributes: true,
+//         minifyCSS: true,
+//         minifyJS: true,
+//       })
+//     )
+//     .pipe(gulp.dest(`${dist}/html/`));
 
 // scss => min.css
 const css = () =>
@@ -141,7 +145,8 @@ const css = () =>
 
 // js => minified js
 const js = (inputFromSrc) => {
-  const isBgScript = inputFromSrc === "background.js" ? true : false;
+  const isBgScript =
+    inputFromSrc === manifest.background.service_worker ? true : false;
   // ignore jest test files
   const jestTestsGlob = inputFromSrc.slice(0, -2).concat("test.js");
 
@@ -168,9 +173,18 @@ const backgroundScript = () => js(`background.js`);
 
 // to folders for installs
 const compress = (ext) => {
-  const manifest = require(`${dist}/manifest.json`);
   const version = manifest.version;
-  const name = manifest.name;
+  let definedFileName = messages.extensionFileName;
+  let name;
+  // use name defined in _locales/messages.json -> extensionFileName
+  if (definedFileName) name = definedFileName.message;
+  // else use the i18n name of extension
+  else if (name.startsWith("__MSG_")) {
+    const messageName = name.replace(/^__MSG_/, "").replace(/__$/, "");
+    name = messages[messageName].message;
+  }
+  // else use the name noted in manifest
+  else name = manifest.name.split(" ").join("_");
   const fileName = `${name}_${version}`;
 
   return gulp
@@ -195,7 +209,7 @@ const watch = () => {
     gulp.series(copyImgs)
   );
   gulp.watch(`${src}/img/**/*.svg`, gulp.series(svg));
-  gulp.watch(`${src}/html/**/*.html`, gulp.series(html));
+  // gulp.watch(`${src}/html/**/*.html`, gulp.series(html));
   gulp.watch(`${src}/scss/**/*.scss`, gulp.series(css));
   gulp.watch(`${src}/**/*.js`, gulp.series(contentScripts, backgroundScript));
 };
@@ -223,14 +237,9 @@ export const build = gulp.series(allBasicTasks, (cb) =>
   notify(cb, "Build done!", "The build is done.")
 );
 
-export const packageExtension = gulp.series(
-  allBasicTasks,
-  zip,
-  thunderZip,
-  (cb) => {
-    notify(cb, "Packages are zipped.", "Packages are finished zipping.");
-  }
-);
+export const packaging = gulp.series(allBasicTasks, zip, thunderZip, (cb) => {
+  notify(cb, "Packages are zipped.", "Packages are finished zipping.");
+});
 
 // export default {
 //   dev,

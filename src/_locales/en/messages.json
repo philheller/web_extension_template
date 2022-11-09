@@ -3,6 +3,14 @@
     "message": "Extension name",
     "description": "Name of this extension"
   },
+  "extensionShortName": {
+    "message": "Ext. Name",
+    "description": "Short name of this extension"
+  },
+  "extensionFileName": {
+    "message": "extension_name",
+    "description": "Name of the packaged file"
+  },
   "extensionDescription": {
     "message": "Extension description",
     "description": "Description of this extension"
