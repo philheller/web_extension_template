@@ -252,7 +252,7 @@ const watch = () => {
   gulp.watch(`${src}/img/**/*.svg`, gulp.series(svg));
   // gulp.watch(`${src}/html/**/*.html`, gulp.series(html));
   gulp.watch(`${src}/scss/**/*.scss`, gulp.series(css));
-  gulp.watch(`${src}/**/*.js`, gulp.series(contentScripts, backgroundScript));
+  gulp.watch(`${src}/**/*.ts`, gulp.series(contentScripts, backgroundScript));
 };
 
 // all basic Tasks that are performed at beginning of sessions

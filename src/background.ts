@@ -12,6 +12,18 @@ function updateBadge(badgeContent: string | number) {
   chrome.action.setBadgeText({ text: String(badgeContent) });
 }
 
+function openCustomPage() {
+  console.log("attempting to open custom page");
+  try {
+    chrome.tabs.create({
+      url: chrome.runtime.getURL("./options/index.html"),
+      selected: true,
+    });
+  } catch (error) {
+    console.log(error);
+  }
+}
+
 // events
 chrome.runtime.onInstalled.addListener(() => {
   console.log("This is a service worker!");
@@ -29,6 +41,9 @@ chrome.runtime.onInstalled.addListener(() => {
   resetCounter();
   // reset counter from context menu
   chrome.contextMenus.onClicked.addListener(() => resetCounter());
+
+  // open custom page on installation
+  openCustomPage();
 });
 
 chrome.action.onClicked.addListener(() => {
