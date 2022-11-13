@@ -10,7 +10,7 @@
     "gulp_build": "gulp build --includeDependencies",
     "dev": "tsc && vite build --emptyOutDir && concurrently --kill-others \"tsc && vite\" \"gulp dev\"",
     "build": "tsc && vite build --emptyOutDir && gulp build --includeDependencies",
-    "package": "tsc && vite build && gulp packaging",
+    "package": "tsc && vite build --emptyOutDir && gulp packaging",
     "test": "jest --config jest.config.js"
   },
   "dependencies": {

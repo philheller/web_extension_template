@@ -10,7 +10,7 @@ import yargs from "yargs";
 const { argv } = yargs;
 import log from "fancy-log";
 import notifier from "node-notifier";
-// import del from "del";
+import { deleteAsync } from "del";
 import gzip from "gulp-zip";
 
 // manifest.json
@@ -70,7 +70,7 @@ function notify(cb, title, message) {
 // TASKS
 // clear build
 const clear = async (cb) => {
-  // await del(["dist"]);
+  await deleteAsync(["package"]);
   cb();
 };
 
@@ -271,7 +271,7 @@ const compress = (ext) => {
   const fileName = `${name}_${version}`;
 
   return gulp
-    .src(`${dist}/**/*`)
+    .src([`${dist}/**/*`, `!${dist}/**/*.map`])
     .pipe(plumber())
     .pipe(gzip(`${fileName}${ext}`))
     .pipe(gulp.dest(`${pack}`));
@@ -328,13 +328,19 @@ export const build = gulp.series(allBasicTasks, (cb) =>
   notify(cb, "Build done!", "A clear build was produced.")
 );
 
-export const packaging = gulp.series(allBasicTasks, zip, thunderZip, (cb) => {
-  notify(
-    cb,
-    "Build done and packages zipped.",
-    "Build is done in 'dist' and extension is zipped in 'package'."
-  );
-});
+export const packaging = gulp.series(
+  clear,
+  allBasicTasks,
+  zip,
+  thunderZip,
+  (cb) => {
+    notify(
+      cb,
+      "Build done and packages zipped.",
+      "Build is done in 'dist' and extension is zipped in 'package'."
+    );
+  }
+);
 
 // default task when just using "gulp"
 export default dev;
