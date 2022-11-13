@@ -67,9 +67,15 @@ function notify(cb, title, message) {
 }
 
 // TASKS
-// clear build
-const clear = async (cb) => {
+// clear package
+const clearPackage = async (cb) => {
   await deleteAsync(["package"]);
+  cb();
+};
+
+// clear package dist
+const clearDist = async (cb) => {
+  await deleteAsync(["dist"]);
   cb();
 };
 
@@ -281,7 +287,7 @@ export const build = gulp.series(allBasicTasks, (cb) =>
 );
 
 export const packaging = gulp.series(
-  clear,
+  clearPackage,
   allBasicTasks,
   zip,
   thunderZip,
@@ -292,6 +298,15 @@ export const packaging = gulp.series(
       "Build is done in 'dist' and extension is zipped in 'package'."
     );
   }
+);
+
+// build without watching
+export const clear = gulp.parallel(clearPackage, clearDist, (cb) =>
+  notify(
+    cb,
+    "Cleaned project directory",
+    "All build files and packages were deleted."
+  )
 );
 
 // default task when just using "gulp"
