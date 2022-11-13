@@ -1,6 +1,8 @@
 // IMPORTS
 // gulp & globals
 import gulp from "gulp";
+const { parallel } = gulp;
+import path from "path";
 import plumber from "gulp-plumber";
 import rename from "gulp-rename";
 import sourcemaps from "gulp-sourcemaps";
@@ -17,14 +19,13 @@ import messages from "./src/_locales/en/messages.json" assert { type: "json" };
 
 // media (imgs and svgs)
 import svgmin from "gulp-svgmin";
+import sharp from "sharp";
+import through2 from "through2";
 
 // sass
-
-// const sass = require("gulp-sass")(require("sass"));
 import sassFrag from "sass";
 import gulpSass from "gulp-sass";
 const sass = gulpSass(sassFrag);
-
 // sass.compiler = require("sass");
 sass.compiler = sassFrag;
 import postcss from "gulp-postcss";
@@ -51,10 +52,17 @@ function isProduction() {
 }
 
 function notify(cb, title, message) {
+  const iconPath = manifest.icons["128"];
+  const fullPathToIcon = path.join(dist, ...iconPath.split("/"));
   notifier.notify({
     title,
+    appID: "Web extension environment",
+    subtitle: undefined,
+    contentImage: undefined,
     message,
     wait: false,
+    sound: false,
+    icon: fullPathToIcon,
   });
   cb();
 }
@@ -69,14 +77,54 @@ const clear = async (cb) => {
 // copy imgs
 const copyImgs = () =>
   gulp
-    .src([`${src}/img/*.jpg`, `${src}/img/*.png`])
+    .src([`${src}/img/**/*.jpg`, `${src}/img/**/*.png`, `!${src}/img/icon/*`])
     .pipe(plumber())
     .pipe(gulp.dest(`${dist}/img/`));
+
+const svg2png = (size) => () => {
+  return gulp
+    .src(`${src}/img/icon/*.svg`)
+    .pipe(
+      through2.obj((file, _, cb) => {
+        return sharp(file.contents)
+          .resize({ width: size })
+          .png()
+          .toBuffer()
+          .then((buffer) => {
+            file.contents = buffer;
+            return cb(null, file);
+          })
+          .catch((err) => {
+            console.error(err);
+            return cb(null, file);
+          });
+      })
+    )
+    .pipe(rename({ suffix: `_${size}x${size}`, extname: ".png" }))
+    .pipe(gulp.dest(`${dist}/img/icons`));
+};
+
+const svg2pngThumbnails = (done) => {
+  const sizes = [];
+  for (const [key, value] of Object.entries(manifest.icons)) {
+    sizes.push(Number(key));
+  }
+  const tasks = sizes.map((size) => {
+    const task = svg2png(size);
+    task.displayName = `svg2png_${size}x${size}`;
+    return task;
+  });
+
+  return gulp.series(gulp.parallel(...tasks), (seriesDone) => {
+    seriesDone();
+    done();
+  })();
+};
 
 // copy svgs
 const svg = () =>
   gulp
-    .src(`${src}/img/*.svg`)
+    .src([`${src}/img/**/*.svg`, `!${src}/img/icon/*`])
     .pipe(plumber())
     .pipe(
       svgmin({
@@ -137,8 +185,6 @@ const css = () =>
     )
     // add autoprefixer & cssNano
     .pipe(postcss([autoprefixer(), cssnano()]))
-    // add suffix
-    .pipe(rename({ suffix: ".min" }))
     // write sourcemap
     .pipe(sourcemaps.write(""))
     .pipe(gulp.dest(`${dist}/css`));
@@ -254,7 +300,15 @@ const watch = () => {
 // all basic Tasks that are performed at beginning of sessions
 const allBasicTasks = gulp.series(
   cpManifest,
-  gulp.parallel(locales, copyImgs, svg, css, contentScripts, backgroundScript)
+  gulp.parallel(
+    locales,
+    copyImgs,
+    svg2pngThumbnails,
+    svg,
+    css,
+    contentScripts,
+    backgroundScript
+  )
 );
 
 // dev task (building and watching afterwards)
@@ -271,24 +325,16 @@ export const dev = gulp.series(
 
 // build without watching
 export const build = gulp.series(allBasicTasks, (cb) =>
-  notify(cb, "Build done!", "The build is done.")
+  notify(cb, "Build done!", "A clear build was produced.")
 );
 
 export const packaging = gulp.series(allBasicTasks, zip, thunderZip, (cb) => {
-  notify(cb, "Packages are zipped.", "Packages are finished zipping.");
+  notify(
+    cb,
+    "Build done and packages zipped.",
+    "Build is done in 'dist' and extension is zipped in 'package'."
+  );
 });
 
-// export default {
-//   dev,
-//   build,
-//   clear,
-//   package: packageExtension,
-//   // used when just using "gulp"
-//   default: dev,
-// };
-// exports.dev = dev;
-// exports.build = build;
-// exports.clear = clear;
-// exports.package = packageExtension;
-// // default function (used with just "gulp")
-// exports.default = dev;
+// default task when just using "gulp"
+export default dev;

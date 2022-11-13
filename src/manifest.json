@@ -7,14 +7,24 @@
   "action": {
     "default_title": "__MSG_extensionName__",
     "default_icon": {
-      "128": "img/cursor.png"
+      "16": "img/icons/cursor_16x16.png",
+      "24": "img/icons/cursor_24x24.png",
+      "32": "img/icons/cursor_32x32.png",
+      "38": "img/icons/cursor_16x16.png",
+      "48": "img/icons/cursor_48x48.png",
+      "128": "img/icons/cursor_128x128.png"
     },
     "default_popup": "popup/index.html"
   },
   "default_locale": "en",
   "description": "__MSG_extensionDescription__",
   "icons": {
-    "128": "img/cursor.png"
+    "16": "img/icons/cursor_16x16.png",
+    "24": "img/icons/cursor_24x24.png",
+    "32": "img/icons/cursor_32x32.png",
+    "38": "img/icons/cursor_16x16.png",
+    "48": "img/icons/cursor_48x48.png",
+    "128": "img/icons/cursor_128x128.png"
   },
   "author": "Your Name",
   "background": {
@@ -23,7 +33,7 @@
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
-      "css": ["css/styles.min.css"],
+      "css": ["css/styles.css"],
       "js": ["js/contentScript.js"]
     }
   ],
