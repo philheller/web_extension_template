@@ -1,7 +1,7 @@
 // IMPORTS
 // gulp & globals
 import gulp from "gulp";
-const { parallel } = gulp;
+// const { parallel } = gulp;
 import path from "path";
 import plumber from "gulp-plumber";
 import rename from "gulp-rename";
@@ -26,13 +26,12 @@ import through2 from "through2";
 import sassFrag from "sass";
 import gulpSass from "gulp-sass";
 const sass = gulpSass(sassFrag);
-// sass.compiler = require("sass");
 sass.compiler = sassFrag;
 import postcss from "gulp-postcss";
 import autoprefixer from "autoprefixer";
 import cssnano from "cssnano";
 
-// js
+// ts
 import buffer from "vinyl-buffer";
 import { createGulpEsbuild } from "gulp-esbuild";
 const gulpEsbuild = createGulpEsbuild({ incremental: false });
@@ -147,28 +146,6 @@ const cpManifest = () =>
     .pipe(plumber())
     .pipe(gulp.dest(`${dist}`));
 
-// html => minified .html
-// const html = () =>
-//   gulp
-//     .src(`${src}/html/*.html`)
-//     // plumber for error-handling
-//     .pipe(plumber())
-//     // minify html
-//     .pipe(
-//       htmlmin({
-//         html5: true,
-//         collapseWhitespace: true,
-//         useShortDoctype: true,
-//         removeComments: true,
-//         removeRedundantAttributes: true,
-//         sortClassName: true,
-//         sortAttributes: true,
-//         minifyCSS: true,
-//         minifyJS: true,
-//       })
-//     )
-//     .pipe(gulp.dest(`${dist}/html/`));
-
 // scss => min.css
 const css = () =>
   gulp
@@ -225,31 +202,6 @@ const ts = (inputFromSrc) => {
   );
 };
 
-// js => minified js
-const js = (inputFromSrc) => {
-  const isBgScript =
-    inputFromSrc === manifest.background.service_worker ? true : false;
-  // ignore jest test files
-  const jestTestsGlob = inputFromSrc.slice(0, -2).concat("test.ts");
-
-  // if it is backgroundscript, write to root folder, else write all to js
-  const outputPath = isBgScript ? `${dist}/` : `${dist}/js`;
-  return gulp
-    .src([`${src}/${inputFromSrc}`, `!${src}/${jestTestsGlob}`])
-    .pipe(plumber())
-    .pipe(
-      gulpEsbuild({
-        bundle: true,
-        minifyWhitespace: true,
-        minifyIdentifiers: true,
-        minifySyntax: true,
-        sourcemap: true,
-        platform: "browser",
-      })
-    )
-    .pipe(buffer())
-    .pipe(gulp.dest(outputPath));
-};
 const contentScripts = () => ts(`ts/**/*.ts`);
 // const contentScripts = () => js(`js/**/*.js`);
 const backgroundScript = () => ts(`background.ts`);
