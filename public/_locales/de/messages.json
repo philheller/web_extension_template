@@ -7,10 +7,6 @@
     "message": "Ext. Name",
     "description": "Short name of this extension"
   },
-  "extensionFileName": {
-    "message": "extension_name",
-    "description": "Name of the packaged file"
-  },
   "extensionDescription": {
     "message": "Extension description",
     "description": "Description of this extension"
@@ -25,31 +21,29 @@
       }
     }
   },
-  "prompt_for_name": {
-    "message": "What's your name?",
-    "description": "Ask for the user's name"
-  },
-  "hello": {
-    "message": "Hello, $USER$",
-    "description": "Greet the user",
+  "welcomeMsgTitle": {
+    "message": "Welcome to $EXTENSION_NAME$!",
+    "description": "Title in the welcome page (opening when installed)",
     "placeholders": {
-      "user": {
+      "extension_name": {
         "content": "$1",
-        "example": "Cira"
+        "example": "Extension Name"
       }
     }
   },
-  "bye": {
-    "message": "Goodbye, $USER$. Come back to $OUR_SITE$ soon!",
-    "description": "Say goodbye to the user",
-    "placeholders": {
-      "our_site": {
-        "content": "Example.com"
-      },
-      "user": {
-        "content": "$1",
-        "example": "Cira"
-      }
-    }
+  "welcomeMsgParagraph": {
+    "message": "This is your first step towards your own extension leveraging the power of vite with react and tailwind"
+  },
+  "optionsTitle": {
+    "message": "Options"
+  },
+  "optionsMsg": {
+    "message": "Configure your extension"
+  },
+  "googleInjectedTitle": {
+    "message": "React injected code"
+  },
+  "googleInjectedMsg": {
+    "message": "This react code was injected to a google page!"
   }
 }
