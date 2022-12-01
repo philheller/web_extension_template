@@ -1,4 +1,5 @@
 html {
+  /* custom for the popup, overwriting ../index.css */
   width: 400px;
   height: 600px;
 }
