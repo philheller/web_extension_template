@@ -60,21 +60,21 @@ export default defineManifest(async (env) => ({
   background: {
     service_worker: "src/background/background.ts",
   },
-  // content_scripts: [
-  //   // inject react
-  //   {
-  //     matches: ["https://google.com/", "https://*.google.com/"],
-  //     // css code independently injected
-  //     css: ["css/google.css"],
-  //     js: ["src/content/googleInjected/content.tsx"],
-  //   },
-  //   // inject script
-  //   {
-  //     matches: ["https://google.com/search*", "https://*.google.com/search*"],
-  //     css: ["css/google.css"],
-  //     js: ["src/content/scripts/content.ts"],
-  //   },
-  // ],
+  content_scripts: [
+    // inject react
+    {
+      matches: ["https://google.com/", "https://*.google.com/"],
+      // css code independently injected
+      css: ["css/google.css"],
+      js: ["src/content/googleInjected/content.tsx"],
+    },
+    // inject script
+    {
+      matches: ["https://google.com/search*", "https://*.google.com/search*"],
+      css: ["css/google.css"],
+      js: ["src/content/scripts/content.ts"],
+    },
+  ],
   permissions: ["activeTab", "contextMenus", "storage"],
   optional_permissions: ["tabs"],
   commands: {
