@@ -21,6 +21,8 @@ It leverages [vite](https://vitejs.dev/) and [crxjs (plugin)](https://crxjs.dev/
 4. Open `chrome://extensions` and enable developer mode
 5. Click on `Load unpacked` and select the `dist` folder
 
+:link:[Useful next steps](#next-steps)
+
 There you go! :rocket::fire:
 Once the extension was successfully loaded, any changes made to the code reload the extension automatically :tada:
 
@@ -29,3 +31,16 @@ For any additional specifications, check out the plugin [documentation](https://
 ## Building
 
 Run `npm run build` to build the extension.
+
+## Next steps
+
+- [ ] Customize your manifest by editing `manifest.config.ts` ([with this file format](https://developer.chrome.com/docs/extensions/mv3/manifest/))
+- [ ] Add your own icons to `public/icons`
+- [ ] Start customizing your extension's components:
+  - [Popups](https://developer.chrome.com/docs/extensions/reference/action/#popup)
+  - [Options/Settings](https://developer.chrome.com/docs/extensions/mv3/options/) page(s)
+  - Custom pages (see `src/welcome/index.html` opened by `src/background/background.ts` on install)
+  - [Service worker(s)](https://developer.chrome.com/docs/extensions/mv3/service_workers/)
+  - [Content script(s)](https://developer.chrome.com/docs/extensions/mv3/content_scripts/)
+  - [Permissions](https://developer.chrome.com/docs/extensions/reference/permissions/)
+  - and more
